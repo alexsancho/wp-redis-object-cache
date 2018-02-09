@@ -1,0 +1,19 @@
+{
+    "name": "alexsancho/wp-redis-object-cache",
+    "description": "A persistent object cache backend for WordPress powered by Redis. Supports Predis, PhpRedis, HHVM, replication and clustering.",
+    "homepage": "https://github.com/alexsancho/wp-redis-object-cache",
+    "type": "wordpress-dropin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Sancho",
+            "homepage": "https://github.com/alexsancho",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "composer/installers": "~1.0",
+        "roave/security-advisories": "dev-master",
+        "koodimonni/composer-dropin-installer": ">=1.0.1"
+    }
+}
