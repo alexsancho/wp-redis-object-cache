@@ -10,7 +10,7 @@ We wanted to have only the `object-cache.php` dropin file and nothing else.
 ## Installation
 
 ```
-$ composer require devgeniem/wp-redis-object-cache-dropin
+$ composer require alexsancho/wp-redis-object-cache-dropin
 ```
 
 
