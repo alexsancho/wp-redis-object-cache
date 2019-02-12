@@ -374,7 +374,7 @@ class WP_Object_Cache {
 
 		$client = defined( 'WP_REDIS_CLIENT' ) ? WP_REDIS_CLIENT : null;
 
-		if ( class_exists( Redis::class ) && strcasecmp( 'predis', $client ) !== 0 ) {
+		if ( class_exists( 'Redis' ) && strcasecmp( 'predis', $client ) !== 0 ) {
 			$client = defined( 'HHVM_VERSION' ) ? 'hhvm' : 'pecl';
 		} else {
 			$client = 'predis';
@@ -428,8 +428,10 @@ class WP_Object_Cache {
 				}
 
 				// Load bundled Predis library
-				if ( ! class_exists( Predis\Client::class ) ) {
-                    throw new Exception;
+				if ( ! class_exists( 'Predis\Client' ) ) {
+					$plugin_dir = defined( 'WP_PLUGIN_DIR' ) ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/plugins';
+					require_once $plugin_dir . '/redis-cache/includes/predis.php';
+					Predis\Autoloader::register();
 				}
 
 				$options = [];
@@ -482,6 +484,10 @@ class WP_Object_Cache {
 			$this->global_prefix = ( is_multisite() || ( defined( 'CUSTOM_USER_TABLE' ) && defined( 'CUSTOM_USER_META_TABLE' ) ) ) ? '' : $table_prefix;
 			$this->blog_prefix   = ( is_multisite() ? $blog_id : $table_prefix ) . ':';
 		}
+
+		if ( is_admin() ) {
+		    add_action('wp_footer', [$this, 'stats']);
+        }
 	}
 
 	/**
@@ -624,6 +630,7 @@ class WP_Object_Cache {
 
 		$this->cache = [];
 
+        $result = false;
 		if ( $this->redis_status() ) {
 			$result = $this->parse_redis_response( $this->redis->flushdb() );
 		}
